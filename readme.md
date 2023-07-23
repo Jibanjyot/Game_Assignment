@@ -1,0 +1,1 @@
+### Paste the code in p5js editor and run to view the game. Click on the game view to enable left and right key arrow events.
