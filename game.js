@@ -3,6 +3,7 @@ let paddle_y, paddle_x, paddle_width, paddle_height, paddle_dx;
 const brickRows = 4, brickColumns = 4;
 const brick_width = 80, brick_height = 20, brick_padding = 15, brickOffsetLeft = 15, brickOffsetTop = 10;
 let score = 0;
+let lives = 3;
 let bricks = [];
 let lost = false;
 
@@ -72,6 +73,12 @@ function draw() {
         ball_dy = 0;
         ball_dx = 0;
         lost = true;
+        if (lives === 0) {
+            textSize(18);
+            textAlign(CENTER);
+            text("Game Over", width / 2, height / 2);
+            return;
+        }
     } else {
         if (isBrickHit()) {
             score++;
@@ -92,12 +99,18 @@ function draw() {
         textSize(18);
         textAlign(CENTER);
         text("Game Won", width / 2, height / 2);
+
     }
+
+    textSize(18);
+    textAlign(CENTER);
+    text("Score: "+score, width / 2, height / 2-30);
 
     if (lost) {
         textSize(18);
         textAlign(CENTER);
         text("Game Lost", width / 2, height / 2);
+        text("Lives: " + lives, width / 2, height / 2 + 30);
     }
 
     ball_x += ball_dx;
@@ -125,10 +138,10 @@ function isBrickHit() {
                 const brickLeft = bricks[c][r].x;
                 const brickRight = bricks[c][r].x + brick_width;
 
-                if (ball_y + ball_radius >= brickTop && ball_y - ball_radius <= brickBottom && ball_x + ball_radius >= brickLeft && ball_x - ball_radius <= brickRight ) {
-                    ball_dy = -ball_dy; 
+                if (ball_y + ball_radius >= brickTop && ball_y - ball_radius <= brickBottom && ball_x + ball_radius >= brickLeft && ball_x - ball_radius <= brickRight) {
+                    ball_dy = -ball_dy;
                     bricks[c][r].hidden = true;
-                    brickHit = true; 
+                    brickHit = true;
                 }
             }
         }
@@ -140,11 +153,20 @@ function isBrickHit() {
 
 
 function gameOver() {
-    return ball_y >= height - ball_radius / 2;
+    if (ball_y >= height - ball_radius / 2) {
+        
+        return true;
+    }
+    return false;
 }
 
 function mousePressed() {
-    if (lost || score === brickRows * brickColumns) {
+    if (lives) {
+
+        if(lost){
+            lives--;
+        }
+        
         resetGame();
     }
 }
